@@ -1,292 +1,183 @@
-#include <iostream>
-#define MAX_LENGTH 30
+/* 1. ask for expression
+2.if a to z push to popstack
+3.else push to opstack
+4. if ) comes move op to pop
+5. if any operator comes after & then move op to pop
+6. if any operator comes after * or / except & move op to pop
+7. if expression end the move op to pop
+and print last pop as postfix*/
+#include<iostream>
+#include<stack>
+#include<string>
 using namespace std;
+class con{
+	public:
+		int proc(char c){
+			if(c=='$'||c=='^'){
+				return 3;
+			}
+			else if(c=='*'||c=='/'){
+				return 2;
+			}
+			else if(c=='+'||c=='-'){
+				return 1;
+			}
+			else {
+				return -1;
+				
+			}
+		}
+		int intopost(string s){
+			stack<char>st;
+			string res;
+		for(int i=0;i<s.length();i++){
+			if((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')){
+				res+= s[i];
+			}
+			else if(s[i]=='('){
+				st.push(s[i]);
+			
+		
+			}
+			else if(s[i]==')'){
+				while(!st.empty()&& st.top()!='('){
+					res+=st.top();
+					st.pop();
+					
+				}
+				if(!st.empty()){
+					st.pop();
+				}
+			}
+			else{
+			while(!st.empty()&&proc(st.top())>proc(s[i]))
+			{
+					res+=st.top();
+						st.pop();
+							}
+							st.push(s[i]);
+			}
+		}
+		while(!st.empty()){
+			res+=st.top();
+			st.pop();
+		}
+		
+		cout<<res<<endl;	
+		}
+		int infix_to_prefix(string k){
+		int n = k.size();
+    for (int i = 0; i < n / 2; i++) {
 
-// New things in PostFixer
-/*1) substituted top instead of length
-  2) renamed user_expression to expression
-  3) renamed post_stack_displayer to traverse_post_stack
-  4) same as num 3 for op_stack
-  5) renamed class as PostFixer to Converter
-  6) now can convert to both infix to postfix along with infix to prefix
-  7) Program is now menu driven
-  8) Flexible max length if needed
-  */
+        char temp = k[i];
+        k[i] = k[n - i - 1];
+        k[n - i - 1] = temp;
 
-class Converter
-{
-public:
-    char on_scan_ch;
-    char expression[MAX_LENGTH], post_stack[MAX_LENGTH], op_stack[MAX_LENGTH];
-    int op_stack_top = -1, post_stack_top = -1, infix_expression_top = -1, final_index = 0, userChoice = 0;
 
-    // CONSTRUCTORS
-    Converter()
-    {
-        cout << "Enter an expression: ";
-        cin >> expression;
-        for (int i = 0; i < MAX_LENGTH && expression[i] != '\0'; i++)
-        {
-            if (expression[i + 1] == '\0')
-            {
-                final_index = i + 1;
-            }
-        }
-    }
-    Converter(char temp_ch[MAX_LENGTH])
-    {
-        for (int i = 0; i < MAX_LENGTH && expression[i] != '\0'; i++)
-        {
-            if (expression[i + 1] == '\0')
-            {
-                final_index = i + 1;
-            }
-            expression[i] = temp_ch[i];
-        }
-    }
+        if (k[i] == '(') k[i] = ')';
+        else if (k[i] == ')') k[i] = '(';
 
-    // USED FUNCTIONS
-
-    int precedence_provider(char ch)
-    {
-        switch (ch)
-        {
-        case '$':
-            return 3;
-            break;
-
-        case '*':
-        case '/':
-            return 2;
-            break;
-
-        case '+':
-        case '-':
-            return 1;
-            break;
-
-        default:
-            return 0;
-            break;
-        }
-        return 0;
-    }
-
-    void push_alphabet()
-    {
-        post_stack_top++;
-        post_stack[post_stack_top] = on_scan_ch;
+        if (k[n - i - 1] == '(') k[n - i - 1] = ')';
+        else if (k[n - i - 1] == ')') k[n - i - 1] = '(';
     }
 
-    void push_operator()
-    {
-        op_stack_top++;
-        op_stack[op_stack_top] = on_scan_ch;
+   
+    if (n % 2 != 0) {
+        int mid = n / 2;
+        if (k[mid] == '(') k[mid] = ')';
+        else if (k[mid] == ')') k[mid] = '(';
     }
 
-    void op_stack_to_post_stack_cause_bracket()
-    {
-        while (op_stack[op_stack_top] != '(')
-        {
-            post_stack_top++;
-            post_stack[post_stack_top] = op_stack[op_stack_top];
-            op_stack_top--;
-        }
-        // Mathi ko ma somehow '(' always remains cause while exits when !- '(' and top doesn't decrease which 
-        // leads to '(' remaining in op stack so we use if condition below to remove the final '('
-        if (op_stack[op_stack_top] == '(')
-        {
-            --op_stack_top;
-        }
+    cout<<k<<endl;
+    	stack<char>st2;
+			string ress;
+		for(int i=0;i<k.length();i++){
+			if((k[i] >= 'a' && k[i] <= 'z') || (k[i] >= 'A' && k[i] <= 'Z')){
+				ress+= k[i];
+			}
+			else if(k[i]=='('){
+				st2.push(k[i]);
+			
+		
+			}
+			else if(k[i]==')'){
+				while(!st2.empty()&& st2.top()!='('){
+					ress+=st2.top();
+					st2.pop();
+					
+				}
+				if(!st2.empty()){
+					st2.pop();
+				}
+			}
+			else{
+			while(!st2.empty()&&proc(st2.top())>proc(k[i]))
+			{
+					ress+=st2.top();
+						st2.pop();
+							}
+							st2.push(k[i]);
+			}
+		}
+		while(!st2.empty()){
+			ress+=st2.top();
+			st2.pop();
+		}
+		int m = ress.size();
+    for (int i = 0; i < n / 2; i++) {
+        
+        char temp = ress[i];
+        ress[i] = ress[m- i - 1];
+        ress[m - i - 1] = temp;
+
+       
+        if (ress[i] == '(') ress[i] = ')';
+        else if (ress[i] == ')') ress[i] = '(';
+
+        if (ress[m - i - 1] == '(') ress[m - i - 1] = ')';
+        else if (ress[m - i - 1] == ')') ress[m - i - 1] = '(';
     }
 
-    void op_stack_to_post_stack_cause_precedence()
-    {
-        for (int i = op_stack_top; i > -1; i--)
-        {
-            // If bracket comes then stop the stack transfer operation
-            if (op_stack[i] == '(')
-            {
-                break;
-            }
-            // else it just continues as it is supposed to
-            else
-            {
-                post_stack_top++;
-                post_stack[post_stack_top] = op_stack[op_stack_top];
-                op_stack_top--;
-            }
-        }
+    // Handle the middle character if the string length is odd
+    if (m % 2 != 0) {
+        int mid = m / 2;
+        if (ress[mid] == '(') ress[mid] = ')';
+        else if (ress[mid] == ')') ress[mid] = '(';
     }
 
-    void traverse_post_stack()
-    {
-        // i starts from zero then stops when it is equal to value of top of post_stack
-        for (int i = 0; i <= post_stack_top; i++)
-        {
-            cout << post_stack[i];
-        }
-        // leaving 2 tabs so it will be easier to display in table view
-        cout << "\t\t";
-    }
-
-    void traverse_op_stack()
-    {
-        // i starts from zero then stops when it is equal to value of top of op_stack
-        for (int i = 0; i <= op_stack_top; i++)
-        {
-            cout << op_stack[i];
-        }
-        // op-stack is in last column so endl is necessary
-        cout << endl;
-    }
-
-   /* void infix_to_postfix()
-    {
-        // Table headings
-        cout << "Scan_Stack\tPost_Stack\tOp_Stack" << endl;
-
-        // initializing q to manipulate while loop
-        int q = 0;
-        // while loop runs till q is less than final_index (final index contains '\0')
-        while (q < final_index)
-        {
-            // putting characters one by one to on_scan_ch via while loop
-            on_scan_ch = expression[q];
-            // leaving two tabs for clear readability
-            cout << on_scan_ch << "\t\t";
-            // converting character from character to integer to compare the ascii values and recognize alphabets
-            int temp_ch = int(on_scan_ch);
-
-            // CHECKING IF TEMP_CH IS AN ALPHABET
-            if ((temp_ch >= 65 && temp_ch <= 90) || (temp_ch >= 97 && temp_ch <= 122))
-            {
-                // This condition works if scanned character is an alphabet
-                push_alphabet();
-            }
-
-            // CHECK IF TEMP_CH IS ' ) '
-            else if (temp_ch == ')')
-            {
-                // this function pushes contents of op_stack to post_stack if ')' is found and does so until '(' is found which
-                // is in function defintion
-                op_stack_to_post_stack_cause_bracket();
-            }
-            // CHECK IF TEMP_CH IS ' ( '
-            else if (temp_ch == '(')
-            {
-                op_stack_top++;
-                op_stack[op_stack_top] = temp_ch;
-                // puts '(' on top of op_stack
-            }
-            // IF THE CHARACTER IS NOT AN ALPHABET, NOT A BRACKET THEN IT WILL BE AN OPERATOR WHICH WILL BE HANDLED IN THIS CASE
-            else
-            {
-                // FIRST WE HAVE TO CHECK PRECEDENCE OF OPERATOR THAT IS ALREADY IN op_stack
-                if (precedence_provider(op_stack[op_stack_top]) > precedence_provider(temp_ch))
-                {
-                    op_stack_to_post_stack_cause_precedence();
-                }
-                // IF PRECEDENCE PROBLEM IS SOLVED THAN TEMP_CH(i.e: q) IS PUSHED
-                push_operator();
-            }
-            traverse_post_stack();
-            traverse_op_stack();
-            q++; // incrementing q each time by 1 for while loop
-        }
-        while (op_stack_top > -1) // To make sure all characters of op_stack are pushed to post_stack
-        {
-            post_stack_top++;
-            post_stack[post_stack_top] = op_stack[op_stack_top];
-            op_stack_top--;
-        }
-        cout << endl
-             << "FINAL POSTFIX EXPRESSION : ";
-        traverse_post_stack();
-        cout << endl;
-    }
-
-    void infix_to_prefix()
-    {
-        char rev1[MAX_LENGTH], rev2[MAX_LENGTH];
-        // REVERSING FOR THE FIRST TIME BEFORE POSTFIX CONVERSION
-        for (int i = 0; i < final_index; i++)
-        {
-            if (expression[i] == '(')
-            {
-                rev1[final_index - (i + 1)] = ')';
-            }
-
-            else if (expression[i] == ')')
-            {
-                rev1[final_index - (i + 1)] = '(';
-            }
-
-            else
-            {
-                rev1[final_index - (i + 1)] = expression[i];
-            }
-        }
-
-        // OVERWRITING VALUES OF REV1 TO array expression[i] as it will be used in
-        // function infix to postfix and not rev1
-        for (int i = 0; i < final_index; i++)
-        {
-            expression[i] = rev1[i];
-        }
-
-        // CONVERTING TO PREFIX
-        infix_to_postfix();
-
-        // REVERSING FOR THE LAST TIME TO GET THE FINAL ANSWER
-        for (int i = 0; i <= post_stack_top; i++)
-        {
-            rev2[post_stack_top - i] = post_stack[i];
-        }
-
-        // FINALLY DISPLAYING THE RESULT
-        cout << "FINAL PREFIX EXPRESSION : ";
-        for (int i = 0; i <= post_stack_top; i++)
-        {
-            cout << rev2[i];
-        }
-        cout << endl;
-    }*/
-
-    void main_process()
-    {
-        do
-        {
-            cout << "Choose an operation from below : " << endl;
-            cout << " 1 ) Postfix" << endl;
-            cout << " 2 ) Prefix" << endl;
-            cout << " 3 ) Exit" << endl;
-            cin >> userChoice;
-
-            switch (userChoice)
-            {
-            case 1:
-                infix_to_postfix();
-                break;
-
-            case 2:
-                infix_to_prefix();
-                break;
-
-            case 3:
-                cout << "Exiting program ..." << endl;
-                break;
-
-            default:
-                cout << "Invalid input please try again!!..." << endl;
-                break;
-            }
-        } while (userChoice != 3);
-    }
+    cout<<ress<<endl;
+    
+		}
+	
 };
+int main(){
+	int a;
+	
+	con c;
+	string ex,ex1;
+	char p;
+	do{
+	cout<<"Sandeep"<<endl;
+	cout<<"\t\t\t\tMENU"<<endl;
+	cout<<"Enter 1 for infix to postfix"<<endl;
+	cout<<"Enter 2 for infix to prefix"<<endl;
+	cin>>a;
+	switch(a){
+		case 1:
+			cout<<"Enter your expression"<<endl;
+			cin>>ex;
+			c.intopost(ex);
+			break;
+		case 2:
+			cout<<"enter your expression"<<endl;
+			cin>>ex1;
+			c.infix_to_prefix(ex1);
+			
+	}
+	cout<<"do you want to continue?(y/n)"<<endl;
+	cin>>p;
+}while(p=='y');
 
-int main()
-{
-    Converter c1;
-    c1.main_process();
+
+return 0;
 }
